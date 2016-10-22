@@ -46,39 +46,39 @@ class Whitelister
     sg_query.tags
   end
   
+  def expire
+    list_tags.each do |x|
+      if Time.now.to_i > x.value.to_i + 3600*24*2 
+		puts "Removing #{x.key} rule"
+		remove_ip(x.key)
+		puts "Removing #{x.key} tag" 
+		remove_tag(x.key, x.value) 
+	  else
+	    puts "Nothing to expire"
+	  end
+    end
+  end
+  
   def get_tags(user_ip)
     entry = sg_query.tags
     entry.find { |s| s.key == "#{user_ip}/32" }
-  end
-  
-  def expire_entry
-    tag_time = get_tags.value
-    now = Time.now.to_i
-    tag_expire = tag_time.to_i + 3600*24*14
-    if now > tag_expire
-      puts "Expiring #{user_ip} rule"
-      remove_ip
-      remove_tag
-    else
-      puts "Nothing to expire"
-    end
   end
   
   def remove_ip(user_ip)
     client.revoke_security_group_ingress({
 	group_id: sg_id,
 	ip_protocol: "-1",
-	cidr_ip: user_ip
+	cidr_ip: "#{user_ip}/32"
     })  
   end
   
-  def remove_tag(user_ip)
+  def remove_tag(user_ip, timestamp)
 	client.delete_tags({
 	  resources: [sg_id],
 	  tags: [
 		{
 		  key: user_ip, 
-		  value: get_tags.value
+		  value: get_tags(user_ip)
 		}
 	  ]
 	})  
