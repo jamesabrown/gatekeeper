@@ -2,7 +2,12 @@
 require 'sinatra'
 require './whitelister.rb'
 
-security_group = 'sg-XX'
+security_group = ENV['GK_SGID'] || 'sg-XXX' 
+auth_token = ENV['GK_AUTH_TOKEN']
+
+before do
+  error 401 unless params[:key] = auth_token
+end
 
 get '/' do
   'What are we adding to the whitelist?'
