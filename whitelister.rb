@@ -54,7 +54,7 @@ class Whitelister
 		puts "Removing #{x.key} tag" 
 		remove_tag(x.key, x.value) 
 	  else
-	    puts "Nothing to expire"
+	    puts "#{x.key} not being expired"
 	  end
     end
   end
