@@ -47,7 +47,7 @@ class Whitelister
   end
   
   def expire
-    list_tags.each do |x|
+    list_tags.delete_if{ |t| t.key == "Name" }.each do |x|
       if Time.now.to_i > x.value.to_i + 3600*24*2 
 		puts "Removing #{x.key} rule"
 		remove_ip(x.key)
