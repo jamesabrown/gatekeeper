@@ -2,11 +2,13 @@
 require 'sinatra'
 require './whitelister.rb'
 
+set :bind, '0.0.0.0'
+
 security_group = ENV['GK_SGID'] || 'sg-XXX' 
 auth_token = ENV['GK_AUTH_TOKEN']
 
 before do
-  error 401 unless params[:key] = auth_token
+  error 401 unless params[:key] == auth_token
 end
 
 get '/' do
