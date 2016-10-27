@@ -15,7 +15,7 @@ Gatekeeper requires several environment variables in order to properly authentic
 Gatekeeper has a Docker container built to run the app easily with the following commands
 
 ```shell
-docker pull jameabrown/gatekeeper
-docker run -d -p 80:4567 --env-file ./env.list jb/gatekeeper
+docker pull jamesabrown/gatekeeper
+docker run -d -p 80:4567 --env-file ./env.list jamesabrown/gatekeeper
 ```
 
