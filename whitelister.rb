@@ -26,7 +26,7 @@ class Whitelister
   end
   
   def add_tag(user_ip)
-    client.create_tags({
+    client.create_tags(
       resources: [sg_id],
       tags: [
         {
@@ -34,7 +34,7 @@ class Whitelister
           value: timestamp.to_s
         } 
       ]
-    })
+    )
   end
   
   def authorize_ip(user_ip)
@@ -65,11 +65,11 @@ class Whitelister
   end
   
   def remove_ip(user_ip)
-    client.revoke_security_group_ingress({
+    client.revoke_security_group_ingress(
     group_id: sg_id,
     ip_protocol: "-1",
     cidr_ip: "#{user_ip}/32"
-    })  
+    )  
   end
   
   def remove_tag(user_ip, timestamp)
