@@ -4,8 +4,8 @@ require './whitelister.rb'
 
 set :bind, '0.0.0.0'
 
-security_group = ENV['GK_SGID'] || 'sg-XXX' 
-auth_token = ENV['GK_AUTH_TOKEN']
+SECURITY_GROUP = ENV['GK_SGID'] or raise "GK_SGID must be set" 
+AUTH_TOKEN = ENV['GK_AUTH_TOKEN'] or raise "GK_AUTH_TOKEN must be set"
 
 before do
   error 401 unless request.env['HTTP_KEY'] == auth_token
