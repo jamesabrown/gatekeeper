@@ -21,11 +21,11 @@ post '/whitelist/:ip' do
   user_ip = params[:ip]
   w = Whitelister.new(ENV['AWS_REGION'], SECURITY_GROUP)
   w.authorize_ip(user_ip)
-  response 200
+  200
 end
 
 post '/expire/' do
   w = Whitelister.new(ENV['AWS_REGION'], SECURITY_GROUP)
   w.expire
-  response 200
+  200
 end
