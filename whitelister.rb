@@ -23,8 +23,12 @@ class Whitelister
   end
 
   def authorize_ip(user_ip)
-    add_ip(user_ip)
-    add_tag(user_ip)
+    begin
+      add_ip(user_ip)
+      add_tag(user_ip)
+    rescue Aws::EC2::Errors::InvalidPermissionDuplicate
+      p '[' + Time.now.to_s + '] duplicate ip ' + user_ip
+    end
   end
 
   private
