@@ -8,7 +8,31 @@ class Whitelister
     @sg_id = sg_id
     @timestamp = Time.now.to_i
   end
-  
+
+  def expire
+    list_tags.delete_if{ |t| t.key == "Name" }.each do |x|
+      if Time.now.to_i > x.value.to_i + ENV['EXPIRE_TIME'].to_i
+        puts "Removing #{x.key} rule"
+        remove_ip(x.key)
+        puts "Removing #{x.key} tag"
+        remove_tag(x.key, x.value)
+      else
+        puts "#{x.key} not being expired"
+      end
+    end
+  end
+
+  def authorize_ip(user_ip)
+    begin
+      add_ip(user_ip)
+      add_tag(user_ip)
+    rescue Aws::EC2::Errors::InvalidPermissionDuplicate
+      p '[' + Time.now.to_s + '] duplicate ip ' + user_ip
+    end
+  end
+
+  private
+
   def client
     @client ||= Aws::EC2::Client.new(region: region)
   end
@@ -37,30 +61,12 @@ class Whitelister
     )
   end
   
-  def authorize_ip(user_ip)
-    add_ip(user_ip)
-    add_tag(user_ip)
-  end
-  
   def list_tags
     sg_query.tags
   end
   
-  def expire
-    list_tags.delete_if{ |t| t.key == "Name" }.each do |x|
-      if Time.now.to_i > x.value.to_i + 3600*24*2 
-        puts "Removing #{x.key} rule"
-        remove_ip(x.key)
-        puts "Removing #{x.key} tag" 
-        remove_tag(x.key, x.value) 
-      else
-        puts "#{x.key} not being expired"
-      end
-    end
-  end
-  
   def get_tags(user_ip)
-    entry = sg_query.tags
+    entry = list_tags
     entry.find { |s| s.key == "#{user_ip}/32" }
   end
   
