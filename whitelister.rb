@@ -66,7 +66,7 @@ class Whitelister
   end
   
   def get_tags(user_ip)
-    entry = sg_query.tags
+    entry = list_tags
     entry.find { |s| s.key == "#{user_ip}/32" }
   end
   

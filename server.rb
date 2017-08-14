@@ -8,7 +8,7 @@ set :bind, '0.0.0.0'
 SECURITY_GROUP = ENV['GK_SGID'] or raise 'GK_SGID must be set'
 AUTH_TOKEN = ENV['GK_AUTH_TOKEN'] or raise 'GK_AUTH_TOKEN must be set'
 
-
+#TODO Seperate file, check global variables
 before do
   error 401 unless request.env['HTTP_KEY'] == AUTH_TOKEN
 end
