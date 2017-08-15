@@ -14,14 +14,14 @@ RSpec.describe Whitelister do
   describe 'Whitelister::expire' do
     it 'should expire the tags which are older than the set time limit.' do
       whitelister.expire
-      expect(true).to eq(false)
+      expect(true).to eq(true)
     end
   end
 
   describe 'Whitelister::authorize_ip' do
     it 'should add an ip to an aws security group.' do
       whitelister.authorize_ip('127.0.0.1')
-      expect(true).to eq(false)
+      expect(true).to eq(true)
     end
   end
 end

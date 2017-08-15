@@ -1,14 +1,16 @@
-# test_helper.rb
+require File.expand_path '../../gate_keeper.rb', __FILE__
 require 'rspec'
 require 'rack/test'
 require 'sinatra'
 
-ENV['RACK_ENV'] = 'test'
-require File.expand_path '../../server.rb', __FILE__
-RSpec.configure do |conf|
-  conf.include Rack::Test::Methods
+module RSpecMixin
+  include Rack::Test::Methods
+
+  def app
+    GateKeeper
+  end
 end
 
-def app
-  Sinatra::Application
+RSpec.configure do |c|
+  c.include RSpecMixin
 end
