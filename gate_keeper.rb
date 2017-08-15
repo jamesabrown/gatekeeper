@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # gate_keeper.rb
+require 'logger'
 require 'sinatra/base'
 require './whitelister.rb'
 require 'pry-remote'
@@ -11,6 +12,8 @@ class GateKeeper < Sinatra::Base
   set :raise_errors, true
   set :show_exceptions, false
   set :bind, '0.0.0.0'
+  log = Logger.new(STDOUT)
+
   before do
     check_if_security_group_exists
     check_if_auth_token_exists
@@ -28,13 +31,18 @@ class GateKeeper < Sinatra::Base
   post '/whitelist' do
     user_ip = request_payload['ip']
     user = request_payload['username']
-    p user
-    p user_ip
     w = Whitelister.new(ENV['AWS_REGION'], security_group)
-    w.authorize_ip(user_ip)
-    p '[' + Time.now.to_s + '] user ' + user + ' has registered ip: ' + user_ip
-    content_type :json
-    { :status => 200, :message => 'success' }.to_json
+    if !user.nil? && !user_ip.nil?
+      w.authorize_ip(user_ip)
+      log.info('user ' + user + ' has registered ip: ' + user_ip)
+      content_type :json
+      { :status => 200, :message => 'success' }.to_json
+    else
+      log.info('invalid request')
+      content_type :json
+      status 500
+      body ({ :status => 500, :message => 'failure' }.to_json)
+    end
   end
 
   post '/expire/' do
