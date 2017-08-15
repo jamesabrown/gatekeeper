@@ -8,4 +8,4 @@ RUN bundle install
 
 COPY . /usr/src/app
 
-CMD ["ruby", "server.rb"]
+CMD ["bundle", "exec", "rackup", "-p", "4567", "-o", "0.0.0.0"]

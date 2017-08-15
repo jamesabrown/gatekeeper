@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# server.rb
+# gate_keeper.rb
 require 'sinatra/base'
 require './whitelister.rb'
 require 'pry-remote'
