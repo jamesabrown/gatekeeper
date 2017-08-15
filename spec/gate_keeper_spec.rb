@@ -1,4 +1,6 @@
-require File.expand_path '../test_helper.rb', __FILE__
+# frozen_string_literal: true
+
+require File.expand_path '../spec_helper.rb', __FILE__
 
 describe 'Missing ENV variables' do
   ['/', '/whitelist/1', '/expire', 'random'].each do |path|
