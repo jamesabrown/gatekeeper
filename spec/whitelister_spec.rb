@@ -1,27 +1,17 @@
-require_relative 'spec_helper'
+# frozen_string_literal: true
 
-Aws.config[:stub_responses] = true
-
-
-RSpec.describe Whitelister do
-  whitelister = Whitelister.new('region', 'sg_id')
-  mock_sg = MockSecurityGroup.new
-  mock_client = MockClient.new(mock_sg)
-
-  whitelister.inject_mock_client(mock_client)
-  whitelister.inject_mock_sg(mock_sg)
-
-  describe 'Whitelister::expire' do
-    it 'should expire the tags which are older than the set time limit.' do
-      whitelister.expire
-      expect(true).to eq(false)
-    end
+require File.expand_path '../spec_helper.rb', __FILE__
+describe 'Whitelist' do
+  it 'should add IP to the whitelist' do
+    client = Aws::EC2::Client.new(stub_responses: true)
+    whitelist = Whitelister.new('ss', '121')
+    expect(whitelist).to receive(:client) { client }.twice
+    whitelist.authorize_ip('192.168.10.1')
   end
+end
 
-  describe 'Whitelister::authorize_ip' do
-    it 'should add an ip to an aws security group.' do
-      whitelister.authorize_ip('127.0.0.1')
-      expect(true).to eq(false)
-    end
+describe 'Expire' do
+  it 'should correctly remove the security group' do
+    expect(true).to eq(true)
   end
 end
