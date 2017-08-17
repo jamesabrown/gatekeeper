@@ -1,25 +1,30 @@
 # frozen_string_literal: true
 
 require 'aws-sdk'
+require 'logger'
+require 'pry-remote'
 
 class Whitelister
-  attr_reader :region, :sg_id, :timestamp
+  attr_reader :region, :sg_id, :logger
 
   def initialize(region, sg_id)
     @region = region
     @sg_id = sg_id
-    @timestamp = Time.now.to_i
+  end
+
+  def timestamp
+    Time.now.to_i
   end
 
   def expire
     list_tags.delete_if { |t| t.key == 'Name' }.each do |x|
       if Time.now.to_i > x.value.to_i + ENV['EXPIRE_TIME'].to_i
-        puts "Removing #{x.key} rule"
+        logger.info "Removing #{x.key} rule"
         remove_ip(x.key)
-        puts "Removing #{x.key} tag"
+        logger.info  "Removing #{x.key} tag"
         remove_tag(x.key, x.value)
       else
-        puts "#{x.key} not being expired"
+        logger.info "#{x.key} not being expired"
       end
     end
   end
@@ -28,10 +33,14 @@ class Whitelister
     add_ip(user_ip)
     add_tag(user_ip)
   rescue Aws::EC2::Errors::InvalidPermissionDuplicate
-    p '[' + Time.now.to_s + '] duplicate ip ' + user_ip
+    logger.info(' duplicate ip ' + user_ip)
   end
 
   private
+
+  def logger
+    @logger ||= Logger.new(STDOUT)
+  end
 
   def client
     @client ||= Aws::EC2::Client.new(region: region)
