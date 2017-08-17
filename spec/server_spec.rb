@@ -30,13 +30,21 @@ describe 'Authorized access' do
     expect(last_response.body).to eq('What are we adding to the whitelist?')
   end
 
-  it 'should return a json obj with status code of 200 and a message if the correct body was posted.' do
+  it 'should return a json obj with status code of 200 and a message if the correct body with a correct ip was posted.' do
     expect_any_instance_of(Whitelister).to receive(:authorize_ip)
     post '/whitelist', { 'ip' => '127.0.0.1', 'username' => 'user' }.to_json, 'HTTP_KEY' => 'GK_AUTH_TOKEN'
     result = JSON.parse(last_response.body)
     expect(last_response).to be_ok
     expect(result['status']).to eq(200)
     expect(result['message']).to eq('success')
+  end
+
+  it 'should return a json obj with status code of 500 and a message if the correct body with an incorrect ip was posted.' do
+    post '/whitelist', { 'ip' => '127.0.0.fff', 'username' => 'user' }.to_json, 'HTTP_KEY' => 'GK_AUTH_TOKEN'
+    result = JSON.parse(last_response.body)
+    expect(last_response.status).to eq(500)
+    expect(result['status']).to eq(500)
+    expect(result['message']).to eq('failure')
   end
 
   it 'should return a json obj with status code of 500 and a message if the body does not exist.' do
