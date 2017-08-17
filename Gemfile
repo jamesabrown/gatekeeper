@@ -3,6 +3,7 @@ ruby '2.3.1'
 
 gem 'aws-sdk'
 gem 'sinatra'
+gem 'rufus-scheduler'
 
 group :development do
   gem 'pry'

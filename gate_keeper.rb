@@ -3,8 +3,10 @@
 # gate_keeper.rb
 require 'logger'
 require 'sinatra/base'
-require './whitelister.rb'
 require 'pry-remote'
+
+require_relative './whitelister.rb'
+require_relative './scheduler.rb'
 
 class GateKeeper < Sinatra::Base
   attr_reader :security_group, :auth_token, :request_payload, :logger, :whitelister
@@ -40,13 +42,8 @@ class GateKeeper < Sinatra::Base
       logger.info('invalid request')
       content_type :json
       status 500
-      body ({ :status => 500, :message => 'failure' }.to_json)
+      body({ :status => 500, :message => 'failure' }.to_json)
     end
-  end
-
-  post '/expire' do
-    whitelister.expire
-    200
   end
 
   private
