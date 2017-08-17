@@ -34,7 +34,6 @@ class GateKeeper < Sinatra::Base
   post '/whitelist' do
     user_ip = request_payload['ip']
     user = request_payload['username']
-
     if !user.nil? && !user_ip.nil? && valid_ip?(user_ip)
       whitelister.authorize_ip(user_ip)
       logger.info('user ' + user + ' has registered ip: ' + user_ip)
@@ -74,8 +73,8 @@ class GateKeeper < Sinatra::Base
   end
 
   def allowed_country?(country_name)
-    country_list = YAML.load_file('./allowed_countries.yaml')['countries']
-    if ENV['ALLOWED_COUNTRIES'] == 'Enabled'
+    if ENV['ALLOWED_COUNTRIES']
+      country_list = ENV['ALLOWED_COUNTRIES'].split(',')
       country_list.any? { |country| country == country_name }
     else
       logger.debug 'No allowed countries set, ignoring the allowed_country? check.'
