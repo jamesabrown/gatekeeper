@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 # gate_keeper.rb
+require 'geocoder'
 require 'logger'
 require 'sinatra/base'
+require 'yaml'
 require 'pry-remote'
 
 require_relative './whitelister.rb'
@@ -33,7 +35,7 @@ class GateKeeper < Sinatra::Base
     user_ip = request_payload['ip']
     user = request_payload['username']
 
-    if !user.nil? && !user_ip.nil? && validate_ip(user_ip)
+    if !user.nil? && !user_ip.nil? && valid_ip?(user_ip)
       whitelister.authorize_ip(user_ip)
       logger.info('user ' + user + ' has registered ip: ' + user_ip)
       content_type :json
@@ -48,8 +50,14 @@ class GateKeeper < Sinatra::Base
 
   private
 
-  def validate_ip(ip)
-    /^[0-9]+.[0-9]+.[0-9]+.[0-9]+$/.match(ip)
+  def valid_ip?(ip)
+    country_name = Geocoder.search(ip)[0].data['country_name']
+    if country_name
+      logger.info 'trying to register ip: ' + ip + ' from ' + country_name
+    else
+      logger.info 'trying to register ip: ' + ip + ' from nil'
+    end
+    /^[0-9]+.[0-9]+.[0-9]+.[0-9]+$/.match(ip) && allowed_country?(country_name)
   end
 
   def logger
@@ -63,6 +71,16 @@ class GateKeeper < Sinatra::Base
   def retrieve_input!
     request.body.rewind
     @request_payload = JSON.parse request.body.read
+  end
+
+  def allowed_country?(country_name)
+    country_list = YAML.load_file('./allowed_countries.yaml')['countries']
+    if ENV['ALLOWED_COUNTRIES'] == 'Enabled'
+      country_list.any? { |country| country == country_name }
+    else
+      logger.debug 'No allowed countries set, ignoring the allowed_country? check.'
+      true
+    end
   end
 
   def check_if_security_group_exists
