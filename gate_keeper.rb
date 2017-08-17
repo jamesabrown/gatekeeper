@@ -7,12 +7,11 @@ require './whitelister.rb'
 require 'pry-remote'
 
 class GateKeeper < Sinatra::Base
-  attr_reader :security_group, :auth_token, :request_payload
+  attr_reader :security_group, :auth_token, :request_payload, :logger, :whitelister
   set :dump_errors, false
   set :raise_errors, true
   set :show_exceptions, false
   set :bind, '0.0.0.0'
-  log = Logger.new(STDOUT)
 
   before do
     check_if_security_group_exists
@@ -31,27 +30,34 @@ class GateKeeper < Sinatra::Base
   post '/whitelist' do
     user_ip = request_payload['ip']
     user = request_payload['username']
-    w = Whitelister.new(ENV['AWS_REGION'], security_group)
+
     if !user.nil? && !user_ip.nil?
-      w.authorize_ip(user_ip)
-      log.info('user ' + user + ' has registered ip: ' + user_ip)
+      whitelister.authorize_ip(user_ip)
+      logger.info('user ' + user + ' has registered ip: ' + user_ip)
       content_type :json
       { :status => 200, :message => 'success' }.to_json
     else
-      log.info('invalid request')
+      logger.info('invalid request')
       content_type :json
       status 500
       body ({ :status => 500, :message => 'failure' }.to_json)
     end
   end
 
-  post '/expire/' do
-    w = Whitelister.new(ENV['AWS_REGION'], security_group)
-    w.expire
+  post '/expire' do
+    whitelister.expire
     200
   end
 
   private
+
+  def logger
+    @logger ||= Logger.new(STDOUT)
+  end
+
+  def whitelister
+    @whitelister ||= Whitelister.new(ENV['AWS_REGION'], security_group)
+  end
 
   def retrieve_input!
     request.body.rewind

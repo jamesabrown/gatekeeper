@@ -7,6 +7,7 @@ gem 'sinatra'
 group :development do
   gem 'pry'
   gem 'pry-remote'
+  gem 'pry-nav'
 end
 
 group :test do
