@@ -10,7 +10,7 @@ services:
 before install:
 
 script:
- - rake test
+ - bundle exec rake test
 
 after_success:
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
