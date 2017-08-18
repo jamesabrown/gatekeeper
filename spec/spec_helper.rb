@@ -4,6 +4,9 @@ require File.expand_path '../../gate_keeper.rb', __FILE__
 require 'rspec'
 require 'rack/test'
 require 'sinatra'
+require 'coveralls'
+
+Coveralls.wear!
 
 module RSpecMixin
   include Rack::Test::Methods

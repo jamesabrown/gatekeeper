@@ -5,6 +5,7 @@ gem 'aws-sdk'
 gem 'sinatra'
 gem 'rufus-scheduler'
 gem 'geocoder'
+gem 'coveralls', require: false
 
 group :development do
   gem 'pry'

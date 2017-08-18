@@ -1,5 +1,6 @@
 # Gatekeeper
 <img src="https://travis-ci.org/jamesabrown/gatekeeper.svg?branch=master"/>
+<a href='https://coveralls.io/github/jamesabrown/gatekeeper?branch=master'><img src='https://coveralls.io/repos/github/jamesabrown/gatekeeper/badge.svg?branch=master' alt='Coverage Status' /></a>
 
 Gatekeeper is an API to allow dynamic management of an AWS security group. 
 
