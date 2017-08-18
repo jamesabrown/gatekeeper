@@ -1,4 +1,6 @@
 # Gatekeeper
+<img src="https://travis-ci.org/jamesabrown/gatekeeper.svg?branch=master"/>
+
 Gatekeeper is an API to allow dynamic management of an AWS security group. 
 
 * You can have an IP added to the security group with the whitelist endpoint on the API. 

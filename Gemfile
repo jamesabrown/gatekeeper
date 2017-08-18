@@ -4,6 +4,7 @@ ruby '2.3.1'
 gem 'aws-sdk'
 gem 'sinatra'
 gem 'rufus-scheduler'
+gem 'geocoder'
 
 group :development do
   gem 'pry'
