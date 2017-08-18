@@ -1,14 +1,12 @@
-# frozen_string_literal: true
-
 require 'coveralls'
 Coveralls.wear!
 
-require File.expand_path '../../gate_keeper.rb', __FILE__
+require_relative  '../gate_keeper.rb'
 
 require 'rspec'
 require 'rack/test'
 require 'sinatra'
-
+require 'Timecop'
 
 module RSpecMixin
   include Rack::Test::Methods

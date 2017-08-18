@@ -6,3 +6,4 @@ env.list
 .git
 .ruby-version
 .coveralls.yml
+coverage

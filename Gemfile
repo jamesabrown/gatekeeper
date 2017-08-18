@@ -5,7 +5,6 @@ gem 'aws-sdk'
 gem 'sinatra'
 gem 'rufus-scheduler'
 gem 'geocoder'
-gem 'coveralls', require: false
 
 group :development do
   gem 'pry'
@@ -17,4 +16,6 @@ group :test do
   gem 'rake'
   gem 'rspec'
   gem 'rack-test'
+  gem 'timecop'
+  gem 'coveralls', require: false
 end

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class MockTag
   attr_reader :key, :value
   def initialize(key,value)
@@ -8,17 +6,15 @@ class MockTag
   end
 end
 
-class Time
-  def to_i
-    5000000
-  end
-end
-
 expired_tag = MockTag.new('127.0.0.1', (Time.now.to_i - 50000).to_s)
 fresh_tag = MockTag.new('127.0.0.2', (Time.now.to_i + 20000).to_s)
 
 require File.expand_path '../spec_helper.rb', __FILE__
 describe 'Whitelist' do
+  before do
+    Timecop.freeze
+  end
+
   it 'should add IP to the whitelist' do
     client = Aws::EC2::Client.new(stub_responses: true)
     whitelist = Whitelister.new('region', '121')
@@ -28,6 +24,10 @@ describe 'Whitelist' do
     expect(client).to receive(:create_tags).with({:resources => ['121'], :tags => [{:key => '192.168.10.1', :value => Time.now.to_i.to_s }]})
 
     whitelist.authorize_ip('192.168.10.1')
+  end
+
+  after do
+    Timecop.return
   end
 end
 

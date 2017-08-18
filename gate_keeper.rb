@@ -1,6 +1,3 @@
-# frozen_string_literal: true
-
-# gate_keeper.rb
 require 'geocoder'
 require 'logger'
 require 'sinatra/base'
