@@ -4,6 +4,7 @@ rvm:
 
 sudo: required
 dist: trusty
+
 services:
   - docker
 
