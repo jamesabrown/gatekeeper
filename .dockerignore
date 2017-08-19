@@ -1,0 +1,9 @@
+env.list
+.gitignore
+.travis.yml
+.idea/
+.DS_Store
+.git
+.ruby-version
+.coveralls.yml
+coverage

@@ -1,3 +1,5 @@
 env.list
-startup.sh
-/startup.sh
+.coveralls.yml
+.DS_Store
+.idea/
+coverage/
