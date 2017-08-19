@@ -6,7 +6,7 @@ require_relative  '../gate_keeper.rb'
 require 'rspec'
 require 'rack/test'
 require 'sinatra'
-require 'Timecop'
+require 'timecop'
 
 module RSpecMixin
   include Rack::Test::Methods
