@@ -1,8 +1,5 @@
 require 'rake'
 require 'rspec/core/rake_task'
-require 'coveralls/rake/task'
-
-Coveralls::RakeTask.new
 
 RSpec::Core::RakeTask.new(:test) do |t|
   t.pattern = Dir.glob('spec/*_spec.rb')
