@@ -14,6 +14,11 @@ class GateKeeper < Sinatra::Base
   set :show_exceptions, false
   set :bind, '0.0.0.0'
 
+  def initialize
+    $stdout.sync = true
+    super
+  end
+
   before do
     check_if_security_group_exists
     check_if_auth_token_exists
