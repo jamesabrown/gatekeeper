@@ -52,13 +52,17 @@ class GateKeeper < Sinatra::Base
   private
 
   def valid_ip?(ip)
-    country_name = Geocoder.search(ip)[0].data['country_name']
-    if country_name
-      logger.info 'trying to register ip: ' + ip + ' from ' + country_name
-    else
-      logger.info 'trying to register ip: ' + ip + ' from nil'
+    is_valid_ip_format = /^[0-9]+.[0-9]+.[0-9]+.[0-9]+$/.match(ip)
+    if is_valid_ip_format
+      valid_country = Geocoder.search(ip)
+      if valid_country && !valid_country.empty?
+        country_name = valid_country[0].data['country_name']
+        logger.info 'trying to register ip: ' + ip + ' from ' + country_name
+      else
+        logger.info 'trying to register ip: ' + ip + ' from nil'
+      end
     end
-    /^[0-9]+.[0-9]+.[0-9]+.[0-9]+$/.match(ip) && allowed_country?(country_name)
+    is_valid_ip_format && allowed_country?(country_name)
   end
 
   def logger

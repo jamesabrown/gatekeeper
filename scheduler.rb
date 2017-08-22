@@ -4,6 +4,8 @@ require_relative './whitelister.rb'
 scheduler = Rufus::Scheduler.new
 logger = Logger.new(STDOUT)
 
+$stdout.sync = true
+
 if !ENV['AWS_REGION'].nil? && !ENV['GK_SGID'].nil?
   logger.debug 'ENV variables present, starting scheduler.'
   scheduler.every '2h' do
