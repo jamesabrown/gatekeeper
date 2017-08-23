@@ -16,6 +16,7 @@ class GateKeeper < Sinatra::Base
 
   def initialize
     $stdout.sync = true
+    GateKeeperScheduler.run
     super
   end
 
