@@ -27,14 +27,16 @@ AWS_ACCESS_KEY                  | AWS Access Key
 AWS_SECRET_ACCESS_KEY           | AWS Secret Access Key
 GK_AUTH_TOKEN                   | Used to validate the Http requests
 EXPIRE_TIME                     | Expire time of IPs entered into the security group
-
-* Copy env.list.sample to env.list and populate with correct values
+ALLOWED_COUNTRIES               | Optional list of whitelisted countries
 
 ### Optional parameters
 If the environment variable `ALLOWED_COUNTRIES` is set, Gatekeeper will only allow countries defined within that variable.
 `ALLOWED_COUNTRIES` is expected to have values arranged in the following way: `United States,Canada,Brazil`
 
 ## Run Gatekeeper
+To get Gatekeeper running in Docker with the correct environment variables, copy env.list.sample to env.list and 
+populate it with the correct values.
+
 Gatekeeper has a Docker container built to run the app easily with the following commands
 
 ```shell
