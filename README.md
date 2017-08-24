@@ -5,7 +5,7 @@ Gatekeeper is an API that allows dynamic management of an AWS security group.
 
 * You can have an IP added to the security group with the whitelist endpoint on the API. 
  To do so, create a POST request to `http://example.com/whitelist`. The body should be in
- in a JSON format configured like the following: `{"username": "user", "ip": "127.0.0.1"}`.
+ a JSON format configured like the following: `{"username": "user", "ip": "127.0.0.1"}`.
  All fields are required in order to complete the request. `username` is just used for 
  logging purposes. `ip` is the string that will be used to add to the security group. 
  
@@ -22,7 +22,7 @@ ENV Variable                    | Description
 ------------------------------- | ----------------------------------------------
 AWS_PROFILE                     | AWS profile config(`default` is fine)
 AWS_REGION                      | AWS region used in the AWS plugin
-GK_SGID                         | AWS GroupID to be modified
+GK_SGID                         | AWS Security Group ID to be modified
 AWS_ACCESS_KEY                  | AWS Access Key
 AWS_SECRET_ACCESS_KEY           | AWS Secret Access Key
 GK_AUTH_TOKEN                   | Used to validate the Http requests
@@ -37,7 +37,7 @@ If the environment variable `ALLOWED_COUNTRIES` is set, Gatekeeper will only all
 To get Gatekeeper running in Docker with the correct environment variables, copy env.list.sample to env.list and 
 populate it with the correct values.
 
-Gatekeeper has a Docker container built to run the app easily with the following commands
+Gatekeeper has a Docker container built with Travis. To run the app with Docker, run the following commands
 
 ```shell
 docker pull jamesabrown/gatekeeper
