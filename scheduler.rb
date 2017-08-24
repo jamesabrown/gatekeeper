@@ -26,8 +26,11 @@ class GateKeeperScheduler
   end
 
   def self.logger
-    $stdout.sync = true
     @logger ||= Logger.new(STDOUT)
+    if ENV['RACK_ENV'] == 'production'
+      logger.level = Logger::WARN
+    end
+    @logger
   end
 
   def self.whitelister

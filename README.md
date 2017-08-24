@@ -5,7 +5,7 @@ Gatekeeper is an API that allows dynamic management of an AWS security group.
 
 * You can have an IP added to the security group with the whitelist endpoint on the API. 
  To do so, create a POST request to `http://example.com/whitelist`. The body should be in
- in a JSON format configured like the following: `{"username": "user", "ip": "127.0.0.1"}`.
+ a JSON format configured like the following: `{"username": "user", "ip": "127.0.0.1"}`.
  All fields are required in order to complete the request. `username` is just used for 
  logging purposes. `ip` is the string that will be used to add to the security group. 
  

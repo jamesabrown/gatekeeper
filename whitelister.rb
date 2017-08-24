@@ -38,6 +38,10 @@ class Whitelister
 
   def logger
     @logger ||= Logger.new(STDOUT)
+    if ENV['RACK_ENV'] == 'production'
+      logger.level = Logger::WARN
+    end
+    @logger
   end
 
   def client

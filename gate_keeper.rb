@@ -54,6 +54,7 @@ class GateKeeper < Sinatra::Base
 
   def valid_ip?(ip)
     is_valid_ip_format = /^[0-9]+.[0-9]+.[0-9]+.[0-9]+$/.match(ip)
+    logger.debug 'debug statement'
     if is_valid_ip_format
       valid_country = Geocoder.search(ip)
       if valid_country && !valid_country.empty?
@@ -68,6 +69,10 @@ class GateKeeper < Sinatra::Base
 
   def logger
     @logger ||= Logger.new(STDOUT)
+    if ENV['RACK_ENV'] == 'production'
+      logger.level = Logger::WARN
+    end
+    @logger
   end
 
   def whitelister

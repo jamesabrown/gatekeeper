@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 require_relative '../scheduler'
 
 describe 'GatekeeperScheduler with ENV variables' do
-  before :each do
+  before do
     ENV['GK_SGID'] = '1234'
     ENV['AWS_REGION'] = 'US-EAST-1'
     ENV['RACK_ENV'] = 'debug'
@@ -13,7 +13,7 @@ describe 'GatekeeperScheduler with ENV variables' do
     GateKeeperScheduler.run
   end
 
-  after :each do
+  after do
     ENV['GK_SGID'] = nil
     ENV['AWS_REGION'] = nil
     ENV['RACK_ENV'] = nil
@@ -21,7 +21,7 @@ describe 'GatekeeperScheduler with ENV variables' do
 end
 
 describe 'GatekeeperScheduler without ENV variables' do
-  before :each do
+  before do
     ENV['GK_SGID'] = nil
     ENV['AWS_REGION'] = nil
     ENV['RACK_ENV'] = 'test'
