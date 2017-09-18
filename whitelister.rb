@@ -15,7 +15,7 @@ class Whitelister
   end
 
   def expire
-    list_tags.delete_if { |t| t.key == 'Name' }.each do |x|
+    list_tags.delete_if { |t| t.key == 'Name' || t.key == 'Terraform' }.each do |x|
       if Time.now.to_i > x.value.to_i + ENV['EXPIRE_TIME'].to_i
         logger.info "Removing #{x.key} rule"
         remove_ip(x.key)
