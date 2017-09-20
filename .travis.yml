@@ -16,7 +16,6 @@ script:
 after_success:
   - export REPO=jamesabrown/gatekeeper
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ] && [ -z "$TRAVIS_PULL_REQUEST_BRANCH" ]; then echo "latest"; elif [ "$TRAVIS_PULL_REQUEST_BRANCH" ]; then echo "$TRAVIS_PULL_REQUEST_BRANCH"; else echo "$TRAVIS_BRANCH"; fi`
-  - echo "$TAG"
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
       docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
       docker build -f Dockerfile -t $REPO . ;
