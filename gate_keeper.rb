@@ -38,7 +38,7 @@ class GateKeeper < Sinatra::Base
     user_ip = request_payload['ip']
     user = request_payload['username']
     if !user.nil? && !user_ip.nil? && valid_ip?(user_ip)
-      whitelister.authorize_ip(user_ip)
+      whitelister.authorize_ip(user_ip, user)
       logger.info('user ' + user + ' has registered ip: ' + user_ip)
       content_type :json
       { :status => 200, :message => 'success' }.to_json

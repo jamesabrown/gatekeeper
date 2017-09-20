@@ -21,10 +21,10 @@ describe 'Whitelist' do
     whitelist = Whitelister.new('region', '121')
 
     expect(whitelist).to receive(:client) { client }.twice
-    expect(client).to receive(:authorize_security_group_ingress).with({:group_id => '121', :ip_protocol => '-1', :cidr_ip => '192.168.10.1/32'})
+    expect(client).to receive(:authorize_security_group_ingress).with({:group_id=>"121", :ip_permissions=> [{:ip_protocol=>"-1", :ip_ranges=>[{:cidr_ip=>"192.168.10.1/32", :description=>"username"}]}]})
     expect(client).to receive(:create_tags).with({:resources => ['121'], :tags => [{:key => '192.168.10.1', :value => Time.now.to_i.to_s }]})
 
-    whitelist.authorize_ip('192.168.10.1')
+    whitelist.authorize_ip('192.168.10.1', 'username')
   end
 
   after do

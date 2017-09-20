@@ -27,8 +27,8 @@ class Whitelister
     end
   end
 
-  def authorize_ip(user_ip)
-    add_ip(user_ip)
+  def authorize_ip(user_ip, username)
+    add_ip(user_ip, username)
     add_tag(user_ip)
   rescue Aws::EC2::Errors::InvalidPermissionDuplicate
     logger.info(' duplicate ip ' + user_ip)
@@ -52,10 +52,19 @@ class Whitelister
     @sg ||= Aws::EC2::SecurityGroup.new(sg_id)
   end
 
-  def add_ip(user_ip)
+  def add_ip(user_ip, username)
     client.authorize_security_group_ingress(group_id: sg_id,
-                                            ip_protocol: '-1',
-                                            cidr_ip: "#{user_ip}/32")
+                                            ip_permissions: [
+                                                {
+                                                    ip_protocol: "-1",
+                                                    ip_ranges: [
+                                                        {
+                                                            cidr_ip: "#{user_ip}/32",
+                                                            description: username
+                                                        }
+                                                    ]
+                                                }
+                                            ])
   end
 
   def add_tag(user_ip)
