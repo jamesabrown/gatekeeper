@@ -8,16 +8,14 @@ dist: trusty
 services:
   - docker
 
-before install:
-
 script:
  - bundle exec rake test
 
 after_success:
   - export REPO=jamesabrown/gatekeeper
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ] && [ -z "$TRAVIS_PULL_REQUEST_BRANCH" ]; then echo "latest"; elif [ "$TRAVIS_PULL_REQUEST_BRANCH" ]; then echo "$TRAVIS_PULL_REQUEST_BRANCH"; else echo "$TRAVIS_BRANCH"; fi`
-  - `if [ "$TAG" == "master" ]
+  - if [ "$TAG" == "master" ]
         docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
         docker build -f Dockerfile -t $REPO . ;
         docker push jamesabrown/gatekeeper;
-     fi`
+     fi
