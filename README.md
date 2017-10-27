@@ -11,7 +11,7 @@ Gatekeeper is an API that allows dynamic management of an AWS security group.
  a JSON format configured like the following: `{"username": "user", "ip": "127.0.0.1"}`.
  All fields are required in order to complete the request. `username` is just used for 
  logging purposes. `ip` is the string that will be used to add to the security group. 
- 
+
 * Gatekeeper will run a method called expire which will remove any entries older than 48 hours.
 
 * The HTTP_KEY header is required to match the GK_AUTH_TOKEN environment variable for authentication. 
@@ -49,4 +49,3 @@ Gatekeeper has a Docker container built with Travis. To run the app with Docker,
 docker pull jamesabrown/gatekeeper
 docker run -d -p 80:4567 --env-file ./env.list jamesabrown/gatekeeper
 ```
-
