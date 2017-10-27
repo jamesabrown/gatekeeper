@@ -1,6 +1,5 @@
 require 'aws-sdk'
 require 'logger'
-require 'pry-remote'
 
 class Whitelister
   attr_reader :region, :sg_id, :logger

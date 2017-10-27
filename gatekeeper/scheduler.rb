@@ -1,7 +1,7 @@
 require 'rufus-scheduler'
 require 'logger'
 
-require_relative './whitelister'
+require_relative 'whitelister'
 
 class GateKeeperScheduler
   attr_reader :logger, :scheduler, :whitelister

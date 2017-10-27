@@ -1,5 +1,5 @@
 require_relative 'spec_helper'
-require_relative '../scheduler'
+require_relative '../gatekeeper/scheduler'
 
 describe 'GatekeeperScheduler with ENV variables' do
   before do
