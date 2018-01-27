@@ -9,7 +9,7 @@ end
 expired_tag = MockTag.new('127.0.0.1', (Time.now.to_i - 50000).to_s)
 fresh_tag = MockTag.new('127.0.0.2', (Time.now.to_i + 20000).to_s)
 
-require File.expand_path '../spec_helper.rb', __FILE__
+require_relative 'spec_helper'
 
 describe 'Whitelist' do
   before do

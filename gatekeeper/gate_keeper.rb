@@ -2,10 +2,9 @@ require 'geocoder'
 require 'logger'
 require 'sinatra/base'
 require 'yaml'
-require 'pry-remote'
 
-require_relative './whitelister.rb'
-require_relative './scheduler.rb'
+require_relative 'whitelister'
+require_relative 'scheduler'
 
 class GateKeeper < Sinatra::Base
   attr_reader :security_group, :auth_token, :request_payload, :logger, :whitelister

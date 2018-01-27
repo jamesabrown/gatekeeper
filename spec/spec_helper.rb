@@ -1,7 +1,7 @@
 require 'coveralls'
 Coveralls.wear!
 
-require_relative '../gate_keeper.rb'
+require_relative '../gatekeeper/gate_keeper'
 
 require 'rspec'
 require 'rack/test'
