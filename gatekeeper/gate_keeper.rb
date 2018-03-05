@@ -38,7 +38,7 @@ class GateKeeper < Sinatra::Base
   post '/whitelist' do
     user_ip = request_payload['ip']
     user    = request_payload['username']
-    if user && valid_ip?(user_ip)
+    if user && IPAddress.valid?(user_ip)
       whitelister.authorize_ip(user_ip, user)
       logger.info('user ' + user + ' has registered ip: ' + user_ip)
       content_type :json
@@ -52,10 +52,6 @@ class GateKeeper < Sinatra::Base
   end
 
   private
-
-  def valid_ip?(ip_address)
-    IPAddress.valid?(ip_address)
-  end
 
   def logger
     @logger ||= Logger.new(STDOUT)
