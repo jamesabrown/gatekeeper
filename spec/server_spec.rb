@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'spec_helper'
 require 'json'
 
@@ -61,7 +63,15 @@ describe 'Authorized access without ALLOWED_COUNTRIES' do
   end
 
   it 'should return a json obj with status code of 500 and a message if the body does not have the proper values.' do
-    post '/whitelist', {'not_ip' => '127.0.0.1', 'not_username' => 'user'}.to_json, 'HTTP_KEY' => 'GK_AUTH_TOKEN'
+    post '/whitelist', { 'not_ip' => '127.0.0.1', 'not_username' => 'user' }.to_json, 'HTTP_KEY' => 'GK_AUTH_TOKEN'
+    result = JSON.parse(last_response.body)
+    expect(last_response.status).to eq(500)
+    expect(result['status']).to eq(500)
+    expect(result['message']).to eq('failure')
+  end
+
+  it 'should return a json obj with status code of 500 and a message if the IP address is invalid.' do
+    post '/whitelist', { 'ip' => 'Invlaid', 'username' => 'user' }.to_json, 'HTTP_KEY' => 'GK_AUTH_TOKEN'
     result = JSON.parse(last_response.body)
     expect(last_response.status).to eq(500)
     expect(result['status']).to eq(500)
@@ -69,46 +79,11 @@ describe 'Authorized access without ALLOWED_COUNTRIES' do
   end
 end
 
-allowed_entry = MockGeocoderEntry.new({'country_name' => 'United States'})
-disallowed_entry = MockGeocoderEntry.new({'country_name' => 'China'})
-nil_entry = MockGeocoderEntry.new({'country_name' => ''})
-
 describe 'Authorized access with ALLOWED_COUNTRIES' do
   before :each do
     ENV['GK_SGID'] = 'GK_SGID'
     ENV['GK_AUTH_TOKEN'] = 'GK_AUTH_TOKEN'
     ENV['ALLOWED_COUNTRIES'] = 'United States,Canada'
-  end
-
-  it 'Should allow an ip if it is from an allowed country.' do
-    allow(Geocoder).to receive(:search).and_return([allowed_entry])
-    expect_any_instance_of(Whitelister).to receive(:authorize_ip)
-
-    post '/whitelist', { 'ip' => '127.0.0.1', 'username' => 'user'}.to_json, 'HTTP_KEY' => 'GK_AUTH_TOKEN'
-    result = JSON.parse(last_response.body)
-    expect(last_response).to be_ok
-    expect(result['status']).to eq(200)
-    expect(result['message']).to eq('success')
-  end
-
-  it 'Should not allow an ip if it is not from an allowed country.' do
-    allow(Geocoder).to receive(:search).and_return([disallowed_entry])
-
-    post '/whitelist', { 'ip' => '127.0.0.1', 'username' => 'user'}.to_json, 'HTTP_KEY' => 'GK_AUTH_TOKEN'
-    result = JSON.parse(last_response.body)
-    expect(last_response.status).to eq(500)
-    expect(result['status']).to eq(500)
-    expect(result['message']).to eq('failure')
-  end
-
-  it 'Should not allow an ip if it is not from a country.' do
-    allow(Geocoder).to receive(:search).and_return([nil_entry])
-
-    post '/whitelist', { 'ip' => '127.0.0.1', 'username' => 'user'}.to_json, 'HTTP_KEY' => 'GK_AUTH_TOKEN'
-    result = JSON.parse(last_response.body)
-    expect(last_response.status).to eq(500)
-    expect(result['status']).to eq(500)
-    expect(result['message']).to eq('failure')
   end
 end
 

@@ -1,4 +1,6 @@
-require 'geocoder'
+# frozen_string_literal: true
+
+require 'ipaddress'
 require 'logger'
 require 'sinatra/base'
 require 'yaml'
@@ -35,42 +37,29 @@ class GateKeeper < Sinatra::Base
 
   post '/whitelist' do
     user_ip = request_payload['ip']
-    user = request_payload['username']
-    if !user.nil? && !user_ip.nil? && valid_ip?(user_ip)
+    user    = request_payload['username']
+    if user && valid_ip?(user_ip)
       whitelister.authorize_ip(user_ip, user)
       logger.info('user ' + user + ' has registered ip: ' + user_ip)
       content_type :json
-      { :status => 200, :message => 'success' }.to_json
+      { status: 200, message: 'success' }.to_json
     else
       logger.info('invalid request')
       content_type :json
       status 500
-      body({ :status => 500, :message => 'failure' }.to_json)
+      body({ status: 500, message: 'failure' }.to_json)
     end
   end
 
   private
 
-  def valid_ip?(ip)
-    is_valid_ip_format = /^[0-9]+.[0-9]+.[0-9]+.[0-9]+$/.match(ip)
-    logger.debug 'debug statement'
-    if is_valid_ip_format
-      valid_country = Geocoder.search(ip)
-      if valid_country && !valid_country.empty?
-        country_name = valid_country[0].data['country_name']
-        logger.info 'trying to register ip: ' + ip + ' from ' + country_name
-      else
-        logger.info 'trying to register ip: ' + ip + ' from nil'
-      end
-    end
-    is_valid_ip_format && allowed_country?(country_name)
+  def valid_ip?(ip_address)
+    IPAddress.valid?(ip_address)
   end
 
   def logger
     @logger ||= Logger.new(STDOUT)
-    if ENV['RACK_ENV'] == 'production'
-      logger.level = Logger::WARN
-    end
+    logger.level = Logger::WARN if ENV['RACK_ENV'] == 'production'
     @logger
   end
 
@@ -81,16 +70,6 @@ class GateKeeper < Sinatra::Base
   def retrieve_input!
     request.body.rewind
     @request_payload = JSON.parse request.body.read
-  end
-
-  def allowed_country?(country_name)
-    if ENV['ALLOWED_COUNTRIES']
-      country_list = ENV['ALLOWED_COUNTRIES'].split(',')
-      country_list.any? { |country| country == country_name }
-    else
-      logger.debug 'No allowed countries set, ignoring the allowed_country? check.'
-      true
-    end
   end
 
   def check_if_security_group_exists
