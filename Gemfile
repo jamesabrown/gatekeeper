@@ -1,10 +1,9 @@
 source 'https://rubygems.org'
-ruby '2.3.1'
 
 gem 'aws-sdk', '~> 3'
 gem 'sinatra'
 gem 'rufus-scheduler'
-gem 'geocoder'
+gem 'geocoder', '= 1.4.6'
 
 group :development do
   gem 'pry'
