@@ -79,14 +79,6 @@ describe 'Authorized access without ALLOWED_COUNTRIES' do
   end
 end
 
-describe 'Authorized access with ALLOWED_COUNTRIES' do
-  before :each do
-    ENV['GK_SGID'] = 'GK_SGID'
-    ENV['GK_AUTH_TOKEN'] = 'GK_AUTH_TOKEN'
-    ENV['ALLOWED_COUNTRIES'] = 'United States,Canada'
-  end
-end
-
 describe 'Unauthorized access' do
   before :each do
     ENV['GK_SGID'] = 'GK_SGID'
