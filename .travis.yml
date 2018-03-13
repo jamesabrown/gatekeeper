@@ -18,4 +18,4 @@ after_success:
   - export REPO=jamesabrown/gatekeeper
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - docker build -f Dockerfile -t $REPO:$TAG .
-  - docker push jamesabrown/gatekeeper
+  - docker push $REPO:$TAG
