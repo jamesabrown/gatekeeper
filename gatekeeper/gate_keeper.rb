@@ -27,27 +27,31 @@ class GateKeeper < Sinatra::Base
     error 401 unless request.env['HTTP_KEY'] == auth_token
   end
 
-  before '/whitelist' do
-    retrieve_input!
+  [ '/whitelist', '/allowlist' ].each do |endpoint|
+    before endpoint do
+      retrieve_input!
+    end
   end
 
   get '/' do
     'What are we adding to the whitelist?'
   end
 
-  post '/whitelist' do
-    user_ip = request_payload['ip']
-    user    = request_payload['username']
-    if user && IPAddress.valid?(user_ip)
-      whitelister.authorize_ip(user_ip, user)
-      logger.info('user ' + user + ' has registered ip: ' + user_ip)
-      content_type :json
-      { status: 200, message: 'success' }.to_json
-    else
-      logger.info('invalid request')
-      content_type :json
-      status 500
-      body({ status: 500, message: 'failure' }.to_json)
+  [ '/whitelist', '/allowlist' ].each do |endpoint|
+    post endpoint do
+      user_ip = request_payload['ip']
+      user    = request_payload['username']
+      if user && IPAddress.valid?(user_ip)
+        whitelister.authorize_ip(user_ip, user)
+        logger.info('user ' + user + ' has registered ip: ' + user_ip)
+        content_type :json
+        { status: 200, message: 'success' }.to_json
+      else
+        logger.info('invalid request')
+        content_type :json
+        status 500
+        body({ status: 500, message: 'failure' }.to_json)
+      end
     end
   end
 
